@@ -3,44 +3,75 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-
-
+using System.Runtime.CompilerServices;
+using JetBrains.Annotations;
 
 public class GameManager : MonoBehaviour
 {
-    public GameObject Player;
-
+    public GameObject player;
     public GameObject[] enemyObjs;
-    Rigidbody2D rigid;
-    
-    public float SpwanPoint;
+
     public float maxSpwanDelay;
     public float curSpwanDelay;
-    public string enemyName;
 
-    // Start is called before the first frame update
+    public static int gameScore;
+    public Text gameScoreText;
+
+
+    // 기능키
+    public static bool isShield;
+
+
     void Start()
     {
-        
+        DontDestroyOnLoad(GameObject.Find("DefaultObject"));
+        gameScore = 0;
+        isShield = false;
     }
 
-    // Update is called once per frame
     void Update()
     {
+        HotKey();
+        gameScoreText.text = string.Format("{0:n0}", gameScore);
+
         curSpwanDelay += Time.deltaTime;
 
-        if(curSpwanDelay > maxSpwanDelay)
+        if(curSpwanDelay > maxSpwanDelay )
         {
             EnemySpwan();
-            maxSpwanDelay = Random.Range(0.5f, 3.0f);
+            maxSpwanDelay = Random.Range(1.0f, 3.0f);
             curSpwanDelay = 0;
         }
+
     }
+
 
     void EnemySpwan()
     {
-        int ranEnemy = Random.Range(0, 3);
-        Vector3 pos = new Vector3(Random.Range(-5.0f, 5.0f), 7.0f, 0);
-        Instantiate(enemyObjs[ranEnemy], transform.position, transform.rotation);
+        if (player.activeSelf == true)
+        {
+            Vector3 pos = new Vector3(Random.Range(-5.5f, 5.5f), 6f, 0);
+            Instantiate(enemyObjs[Random.Range(0, 3)], pos, transform.rotation);
+        }
     }
+
+    void HotKey()
+    {
+        if (Input.GetKeyDown(KeyCode.F1))
+            if (isShield == false)
+            {
+                isShield = true;
+            }
+            else
+            {
+                isShield = false;
+            }
+
+    }
+
+    public static void ScoreUp(int enemyScore)
+    {
+        gameScore += enemyScore;
+    } 
+
 }

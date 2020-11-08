@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.U2D.Path;
 using UnityEditor.UIElements;
 using UnityEngine;
 
@@ -7,6 +9,7 @@ public class Player : MonoBehaviour
 {
     public float speed;
     public float power;
+    public bool isDead;
 
     public bool isTuochTop;
     public bool isTuochBottom;
@@ -20,11 +23,14 @@ public class Player : MonoBehaviour
     public GameObject buttetObjB;
     public GameObject buttetObjC;
 
+    public Sprite[] sprites;
 
     void Start()
     {
         speed = 10;
         power = 1;
+        isDead = false;
+
     }
 
     // Update is called once per frame
@@ -33,8 +39,9 @@ public class Player : MonoBehaviour
         PlayerMove();
         Fier();
         ReLoad();
-
     }
+
+
 
     void Fier()
     {
@@ -74,7 +81,7 @@ public class Player : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.gameObject.tag == "BorderPlayer")
+        if (collision.gameObject.tag == "BorderPlayer")
             switch (collision.gameObject.name)
             {
                 case "Top":
@@ -93,7 +100,27 @@ public class Player : MonoBehaviour
                     isTuochLeft = true;
                     break;
             }
+        else if (collision.gameObject.tag == "BulletEnemy" && GameManager.isShield == false)
+        {
+            isDead = true;
+            gameObject.SetActive(false);
+            Destroy(collision.gameObject);
+            Invoke("RePlay", 1.0f);
+            //spriteRenderer.sprite = sprites[0];
 
+        }
+        else if(collision.gameObject.tag == "BulletEnemy" && GameManager.isShield == true)
+        {
+
+            Destroy(collision.gameObject);
+        }
+    }
+
+    void RePlay()  // 플레이어 다시 나타남.
+    {
+        transform.position = new Vector3(0, -4, 0);
+        gameObject.SetActive(true);
+        isDead = false;
     }
 
     void OnTriggerExit2D(Collider2D collision)
