@@ -81,15 +81,16 @@ public class Enemy : MonoBehaviour
 
         if (collision.gameObject.tag == "BorderDestroy")
             Destroy(gameObject);
-        else if(collision.gameObject.tag == "BulletPlayer")
+        else if(collision.gameObject.tag == "BulletPlayer" || collision.gameObject.tag=="Shield")
         {
             spriteRenderer.sprite = sprites[1];
             Bullet bullet = collision.gameObject.GetComponent<Bullet>();
             hp -= bullet.dmg;
             
-            Destroy(collision.gameObject);
+            if (collision.gameObject.tag != "Shield")
+                Destroy(collision.gameObject);
 
-            if(hp <= 0)
+            if(hp <= 0 || collision.gameObject.tag == "Shield")
             {
                 Destroy(gameObject);
                 GameManager.ScoreUp(enemyScore);

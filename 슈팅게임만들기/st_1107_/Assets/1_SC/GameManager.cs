@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
+//using UnityEngine.UIElements;
 
 public class GameManager : MonoBehaviour
 {
@@ -16,22 +17,23 @@ public class GameManager : MonoBehaviour
 
     public static int gameScore;
     public Text gameScoreText;
+    public Image[] lifeImage;
+    public GameObject gameOverSet;
 
 
-    // 기능키
-    public static bool isShield;
+
+
 
 
     void Start()
     {
         DontDestroyOnLoad(GameObject.Find("DefaultObject"));
         gameScore = 0;
-        isShield = false;
     }
 
     void Update()
     {
-        HotKey();
+
         gameScoreText.text = string.Format("{0:n0}", gameScore);
 
         curSpwanDelay += Time.deltaTime;
@@ -55,23 +57,36 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    void HotKey()
-    {
-        if (Input.GetKeyDown(KeyCode.F1))
-            if (isShield == false)
-            {
-                isShield = true;
-            }
-            else
-            {
-                isShield = false;
-            }
+    
 
-    }
 
     public static void ScoreUp(int enemyScore)
     {
         gameScore += enemyScore;
-    } 
+    }
+
+
+    public void updateLifeIncon(int life)
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            lifeImage[i].color = new Color(1, 1, 1, 0);
+        }
+        for (int i = 0; i<life; i++)
+        {
+            lifeImage[i].color = new Color(1, 1, 1, 1);
+        }
+    }
+
+    public void gameOver()
+    {
+        gameOverSet.SetActive(true);
+
+    }
+
+    public void GameRetry()
+    {
+        SceneManager.LoadScene(0);
+    }
 
 }

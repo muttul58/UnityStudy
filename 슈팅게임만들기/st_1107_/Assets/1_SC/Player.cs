@@ -11,6 +11,13 @@ public class Player : MonoBehaviour
     public float power;
     public bool isDead;
 
+
+    public int life;
+
+    public float maxShieldTime;
+    public float curShieldTime;
+
+
     public bool isTuochTop;
     public bool isTuochBottom;
     public bool isTuochRight;
@@ -22,14 +29,23 @@ public class Player : MonoBehaviour
     public GameObject buttetObjA;
     public GameObject buttetObjB;
     public GameObject buttetObjC;
+    public GameObject shieldObj;
+    
+
+    public GameManager manager;
 
     public Sprite[] sprites;
+
+
+    // 기능키
+    public static bool isShield;
 
     void Start()
     {
         speed = 10;
         power = 1;
         isDead = false;
+        isShield = false;
 
     }
 
@@ -39,6 +55,7 @@ public class Player : MonoBehaviour
         PlayerMove();
         Fier();
         ReLoad();
+        HotKey();
     }
 
 
@@ -60,6 +77,7 @@ public class Player : MonoBehaviour
     void ReLoad()
     {
         curShotDelad += Time.deltaTime;
+        curShieldTime += Time.deltaTime;
     }
 
     void PlayerMove()
@@ -100,18 +118,29 @@ public class Player : MonoBehaviour
                     isTuochLeft = true;
                     break;
             }
-        else if (collision.gameObject.tag == "BulletEnemy" && GameManager.isShield == false)
+        else if ((collision.gameObject.tag == "BulletEnemy"  || collision.gameObject.tag == "Enemy") && isShield == false)
         {
-            isDead = true;
+
+            isDead = true;          
             gameObject.SetActive(false);
             Destroy(collision.gameObject);
-            Invoke("RePlay", 1.0f);
             //spriteRenderer.sprite = sprites[0];
 
-        }
-        else if(collision.gameObject.tag == "BulletEnemy" && GameManager.isShield == true)
-        {
+            life--;
+            manager.updateLifeIncon(life);
+            if(life <= 0)
+            {
+                manager.gameOver();
+            }
+            else
+            {
+                Invoke("RePlay", 2.0f);
+                //RePlay();
+            }
 
+        }
+        else if((collision.gameObject.tag == "BulletEnemy" || collision.gameObject.tag == "Enemy") && isShield == true)
+        {
             Destroy(collision.gameObject);
         }
     }
@@ -144,6 +173,50 @@ public class Player : MonoBehaviour
                     isTuochLeft = false;
                     break;
             }
+
+    }
+
+    void HotKey()
+    {
+        if(isShield == true && curShieldTime >= maxShieldTime)
+        {
+            isShield = false;
+            ShieldOnOff();
+
+        }
+
+        if (Input.GetKeyDown(KeyCode.F1))
+        {
+
+            {
+                if (isShield == false)
+                {
+                    isShield = true;
+                }
+                else if (isShield == true)
+                {
+                    isShield = false;
+                    curShieldTime += Time.deltaTime;
+                }
+                ShieldOnOff();
+            }
+        }
+    }
+
+    void ShieldOnOff()
+    {
+        if (isShield == true && shieldObj.gameObject.activeSelf == false)
+        {
+            Debug.Log("쉴드 완료");
+            shieldObj.gameObject.SetActive(true);
+            curShieldTime = 0;
+
+        }
+        else if (isShield == false && shieldObj.gameObject.activeSelf == true)
+        {
+            Debug.Log("쉴드 해제");
+            shieldObj.gameObject.SetActive(false);
+        }
 
     }
 
