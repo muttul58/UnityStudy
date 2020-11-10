@@ -68,6 +68,7 @@ public class GameManager : MonoBehaviour
 
     public void updateLifeIncon(int life)
     {
+        if (life > 3) life = 3;
         for (int i = 0; i < 3; i++)
         {
             lifeImage[i].color = new Color(1, 1, 1, 0);

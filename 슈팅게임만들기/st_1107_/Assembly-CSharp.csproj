@@ -66,6 +66,7 @@
     <Compile Include="Assets\1_SC\Bullet.cs" />
     <Compile Include="Assets\1_SC\Enemy.cs" />
     <Compile Include="Assets\1_SC\GameManager.cs" />
+    <Compile Include="Assets\1_SC\Item.cs" />
     <Compile Include="Assets\1_SC\Player.cs" />
     <Reference Include="UnityEngine">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2019.4.13f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>

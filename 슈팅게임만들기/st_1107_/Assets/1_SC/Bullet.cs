@@ -16,10 +16,12 @@ public class Bullet : MonoBehaviour
     }
     void Update()
     {
+        
         if (player.activeSelf == false)
         {
            Destroy(gameObject);
         }
+        
 
     }
 
@@ -27,7 +29,5 @@ public class Bullet : MonoBehaviour
     {
         if (collision.gameObject.tag == "BorderDestroy")
             Destroy(gameObject);
-
-
     }
 }

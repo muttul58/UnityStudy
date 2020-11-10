@@ -20,6 +20,7 @@ public class Enemy : MonoBehaviour
     public GameObject PlayerDead;
     public GameObject bulletCode;
     public GameObject PlayerBullet;
+    public GameObject[] itemObjs;
 
 
 
@@ -43,7 +44,8 @@ public class Enemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        Debug.Log("Enemy Update() 시작" + player.activeSelf);
+
         if (player.activeSelf == true)  // 플레이어가 살아 있는 경우만 총알 발사
         {
             Fire();
@@ -57,8 +59,6 @@ public class Enemy : MonoBehaviour
 
     void Fire()
     {
-        
-       
         if (curShotDelay < maxShotDelay  )
             return;
 
@@ -68,7 +68,6 @@ public class Enemy : MonoBehaviour
         rigid.AddForce(bulletPos.normalized * 5, ForceMode2D.Impulse);
 
         curShotDelay = 0;
-
     }
 
      void Reload()
@@ -81,23 +80,53 @@ public class Enemy : MonoBehaviour
 
         if (collision.gameObject.tag == "BorderDestroy")
             Destroy(gameObject);
-        else if(collision.gameObject.tag == "BulletPlayer" || collision.gameObject.tag=="Shield")
+        else if (collision.gameObject.tag == "Shield") 
+            Destroy(collision.gameObject);
+
+        else if(collision.gameObject.tag == "BulletPlayer")
         {
+            Debug.Log("총알 맞음");
             spriteRenderer.sprite = sprites[1];
             Bullet bullet = collision.gameObject.GetComponent<Bullet>();
             hp -= bullet.dmg;
-            
-            if (collision.gameObject.tag != "Shield")
-                Destroy(collision.gameObject);
 
-            if(hp <= 0 || collision.gameObject.tag == "Shield")
+            Invoke("ReturnSprite", 0.1f);
+
+            if(hp <= 0)
             {
                 Destroy(gameObject);
                 GameManager.ScoreUp(enemyScore);
+                
+                int ran = Random.Range(1, 10);
+                if (ran < 4) 
+                {
+                    Debug.Log(" 노 아이템");
+                }
+                else if (ran < 6)
+                {
+                    Debug.Log(" 0번 아이템");
+                    GameObject itemShield = Instantiate(itemObjs[0], transform.position, transform.rotation);
+                    Rigidbody2D rigidShide = itemShield.GetComponent<Rigidbody2D>();
+                    //Vector3 itemPos = player.transform.position - transform.position;
+                    rigidShide.AddForce(Vector2.down  * 1, ForceMode2D.Impulse);
+                }
+                else if (ran < 8)
+                {
+                    GameObject itemPower = Instantiate(itemObjs[1], transform.position, transform.rotation);
+                    Rigidbody2D rigidPower = itemPower.GetComponent<Rigidbody2D>();
+                   // Vector3 itemPos = player.transform.position - transform.position;
+                    rigidPower.AddForce(Vector2.down * 1, ForceMode2D.Impulse);
+                }
+                else if (ran < 10)
+                {
+                    GameObject itemLife = Instantiate(itemObjs[2], transform.position, transform.rotation);
+                    Rigidbody2D rigidLife = itemLife.GetComponent<Rigidbody2D>();
+                    //Vector3 itemPos = player.transform.position - transform.position;
+                    rigidLife.AddForce(Vector2.down * 1, ForceMode2D.Impulse);
+                }
             }
-
-            Invoke("ReturnSprite", 0.1f);
         }
+
     }
 
     void ReturnSprite()

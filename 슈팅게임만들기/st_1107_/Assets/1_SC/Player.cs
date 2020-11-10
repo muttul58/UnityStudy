@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEditor.U2D.Path;
 using UnityEditor.UIElements;
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class Player : MonoBehaviour
 {
@@ -58,8 +59,6 @@ public class Player : MonoBehaviour
         HotKey();
     }
 
-
-
     void Fier()
     {
         if (!Input.GetKey("space"))
@@ -67,9 +66,32 @@ public class Player : MonoBehaviour
         if (curShotDelad < maxShotDelad)
             return;
 
-        GameObject bullet =  Instantiate(buttetObjA, transform.position, transform.rotation);
-        Rigidbody2D rigid = bullet.GetComponent<Rigidbody2D>();
-        rigid.AddForce(Vector2.up * 5, ForceMode2D.Impulse);
+        if (power == 1)
+        {
+            GameObject bulletA =  Instantiate(buttetObjA, transform.position, transform.rotation);
+            Rigidbody2D rigidA = bulletA.GetComponent<Rigidbody2D>();
+            rigidA.AddForce(Vector2.up * 5, ForceMode2D.Impulse);
+        }
+        else if (power == 2)
+        {
+            GameObject bulletB = Instantiate(buttetObjB, transform.position, transform.rotation);
+            Rigidbody2D rigidB = bulletB.GetComponent<Rigidbody2D>();
+            rigidB.AddForce(Vector2.up * 5, ForceMode2D.Impulse);
+        }
+        else if (power == 3)
+        {
+            GameObject bulletR = Instantiate(buttetObjA, transform.position+Vector3.right*0.3f, transform.rotation);
+            GameObject bulletC = Instantiate(buttetObjB, transform.position, transform.rotation);
+            GameObject bulletL = Instantiate(buttetObjA, transform.position + Vector3.left * 0.3f, transform.rotation);
+            Rigidbody2D rigidR = bulletR.GetComponent<Rigidbody2D>();
+            Rigidbody2D rigidC = bulletC.GetComponent<Rigidbody2D>();
+            Rigidbody2D rigidL = bulletL.GetComponent<Rigidbody2D>();
+            rigidR.AddForce(Vector2.up * 5, ForceMode2D.Impulse);
+            rigidC.AddForce(Vector2.up * 5, ForceMode2D.Impulse);
+            rigidL.AddForce(Vector2.up * 5, ForceMode2D.Impulse);
+        }
+
+
         curShotDelad = 0;
 
     }
@@ -77,7 +99,6 @@ public class Player : MonoBehaviour
     void ReLoad()
     {
         curShotDelad += Time.deltaTime;
-        curShieldTime += Time.deltaTime;
     }
 
     void PlayerMove()
@@ -100,6 +121,7 @@ public class Player : MonoBehaviour
     void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.tag == "BorderPlayer")
+        {
             switch (collision.gameObject.name)
             {
                 case "Top":
@@ -118,6 +140,7 @@ public class Player : MonoBehaviour
                     isTuochLeft = true;
                     break;
             }
+        }
         else if ((collision.gameObject.tag == "BulletEnemy"  || collision.gameObject.tag == "Enemy") && isShield == false)
         {
 
@@ -127,29 +150,69 @@ public class Player : MonoBehaviour
             //spriteRenderer.sprite = sprites[0];
 
             life--;
+            Debug.Log(" 생명 -1");
             manager.updateLifeIncon(life);
-            if(life <= 0)
+            Debug.Log(" 생명 아이콘 처리");
+            if (life <= 0)
             {
+                Debug.Log(" 게임끝");
                 manager.gameOver();
             }
             else
             {
                 Invoke("RePlay", 2.0f);
+                Debug.Log(" 다시시작");
                 //RePlay();
             }
-
         }
         else if((collision.gameObject.tag == "BulletEnemy" || collision.gameObject.tag == "Enemy") && isShield == true)
         {
             Destroy(collision.gameObject);
         }
-    }
+        else if(collision.gameObject.tag == "Item")
+        {
+            Debug.Log("아이템 먹음 : " + collision.gameObject.name);
+            switch (collision.gameObject.name)
+            {
+                case "ItemLife(Clone)":
+                    Debug.Log("BBBBBBBBBB !!");
+                    if (life < 3)
+                    {
+                        life++;
+                        manager.updateLifeIncon(life);
+                    }
+                    else
+                        GameManager.ScoreUp(500);
+                    Destroy(collision.gameObject);
+                    break;
 
+                case "ItemShield(Clone)":
+                    Debug.Log("ssssssssss!!");
+                    ShieldOn();
+                    Destroy(collision.gameObject);
+                    break;
+
+                case "ItemPower(Clone)":
+                    Debug.Log("PPPPPP !!");
+                    if (power < 3)
+                        power++;
+                    else
+                        GameManager.ScoreUp(500);
+                    Destroy(collision.gameObject);
+
+                    break;
+            }
+        }
+    }
+    
     void RePlay()  // 플레이어 다시 나타남.
     {
+        Debug.Log("RePlay 함수 시작");
         transform.position = new Vector3(0, -4, 0);
         gameObject.SetActive(true);
         isDead = false;
+        Debug.Log("RePlay 함수 끝");
+
     }
 
     void OnTriggerExit2D(Collider2D collision)
@@ -178,47 +241,32 @@ public class Player : MonoBehaviour
 
     void HotKey()
     {
-        if(isShield == true && curShieldTime >= maxShieldTime)
-        {
-            isShield = false;
-            ShieldOnOff();
-
-        }
-
         if (Input.GetKeyDown(KeyCode.F1))
-        {
-
-            {
-                if (isShield == false)
-                {
-                    isShield = true;
-                }
-                else if (isShield == true)
-                {
-                    isShield = false;
-                    curShieldTime += Time.deltaTime;
-                }
-                ShieldOnOff();
-            }
-        }
+            power = 1;
+        else if (Input.GetKeyDown(KeyCode.F2))
+            power = 2;
+        else if (Input.GetKeyDown(KeyCode.F3))
+            power = 3;
+        else if (Input.GetKeyDown(KeyCode.F4))  // 쉴드 On 
+            ShieldOn();
+        else if(Input.GetKeyDown(KeyCode.F5))
+            if(life<3) manager.updateLifeIncon(life++);
     }
 
-    void ShieldOnOff()
+    void ShieldOn()
     {
-        if (isShield == true && shieldObj.gameObject.activeSelf == false)
-        {
-            Debug.Log("쉴드 완료");
-            shieldObj.gameObject.SetActive(true);
-            curShieldTime = 0;
+        if (isShield == true)
+            return;
 
-        }
-        else if (isShield == false && shieldObj.gameObject.activeSelf == true)
-        {
-            Debug.Log("쉴드 해제");
-            shieldObj.gameObject.SetActive(false);
-        }
-
+        isShield = true;
+        shieldObj.gameObject.SetActive(true);
+        Invoke("ShieldOff", 5.0f);
     }
 
+    void ShieldOff()
+    {
+        isShield = false;
+        shieldObj.gameObject.SetActive(false);
+    }
 }
 

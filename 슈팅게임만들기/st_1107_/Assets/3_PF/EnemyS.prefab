@@ -48,7 +48,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 3
   hp: 1
-  Score: 1
   maxShotDelay: 2
   curShotDelay: 0
   sprites:
@@ -59,7 +58,13 @@ MonoBehaviour:
   enemyBulletObjB: {fileID: 1628514214238489059, guid: 1f0743febc339cf4896edeed44d9ee7d,
     type: 3}
   player: {fileID: 0}
+  PlayerDead: {fileID: 0}
+  bulletCode: {fileID: 0}
   PlayerBullet: {fileID: 0}
+  itemObjs:
+  - {fileID: 9158178298200132186, guid: 9ba9fdec2ce41fc42994dc57f3f7e48f, type: 3}
+  - {fileID: 3403474734551097635, guid: 582954cfbef15f041ac299e7996f8f93, type: 3}
+  - {fileID: 3630068254745371353, guid: 99d63db6b71606143b9d38dcf283839e, type: 3}
   enemyName: S
   enemyScore: 1
 --- !u!212 &5062265107057844670
