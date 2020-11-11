@@ -167,7 +167,8 @@ public class Player : MonoBehaviour
         }
         else if((collision.gameObject.tag == "BulletEnemy" || collision.gameObject.tag == "Enemy") && isShield == true)
         {
-            Destroy(collision.gameObject);
+            if(collision.gameObject.tag == "BulletEnemy")
+                Destroy(collision.gameObject);
         }
         else if(collision.gameObject.tag == "Item")
         {
@@ -189,6 +190,7 @@ public class Player : MonoBehaviour
                 case "ItemShield(Clone)":
                     Debug.Log("ssssssssss!!");
                     ShieldOn();
+                    Invoke("ShieldOff", 5.0f);
                     Destroy(collision.gameObject);
                     break;
 
@@ -255,16 +257,18 @@ public class Player : MonoBehaviour
 
     void ShieldOn()
     {
+       
         if (isShield == true)
             return;
 
         isShield = true;
         shieldObj.gameObject.SetActive(true);
-        Invoke("ShieldOff", 5.0f);
     }
 
     void ShieldOff()
     {
+        if (isShield == false)
+            return;
         isShield = false;
         shieldObj.gameObject.SetActive(false);
     }

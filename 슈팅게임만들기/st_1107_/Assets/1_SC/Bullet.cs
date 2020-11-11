@@ -16,12 +16,12 @@ public class Bullet : MonoBehaviour
     }
     void Update()
     {
-        
+        /*
         if (player.activeSelf == false)
         {
            Destroy(gameObject);
         }
-        
+        */
 
     }
 
