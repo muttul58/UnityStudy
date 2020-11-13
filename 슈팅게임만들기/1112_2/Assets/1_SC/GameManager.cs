@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour
 
     public float maxSpwanTime;
     public float curSpwanTime;
+    public bool isBosSpwan;
 
     public GameObject[] enemyObjs;
 
@@ -22,6 +23,8 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+
+        gameScore = 310;
     }
     // Update is called once per frame
     void Update()
@@ -35,10 +38,24 @@ public class GameManager : MonoBehaviour
     {
         if (curSpwanTime < maxSpwanTime)
             return;
-        EnemySpwan();
+
+        if (gameScore >= 300 && !isBosSpwan)
+            EnemyBosSpwan();
+        else if(!isBosSpwan)
+            EnemySpwan();
+
         maxSpwanTime = Random.Range(1.0f, 3.0f);
         curSpwanTime = 0;
     }
+
+    void EnemyBosSpwan()
+    {
+        isBosSpwan = true;
+        Vector3 pos = new Vector3(0, 6.5f, 0);
+        Instantiate(enemyObjs[3], pos, transform.rotation);
+
+    }
+
 
     void EnemySpwan()
     {

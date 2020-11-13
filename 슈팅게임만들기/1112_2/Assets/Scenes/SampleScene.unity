@@ -464,10 +464,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxSpwanTime: 3
   curSpwanTime: 0
+  isBosSpwan: 0
   enemyObjs:
   - {fileID: 4812271355137549970, guid: c664a067acf4727429efbe10bd79e8b5, type: 3}
   - {fileID: 5234794635189296440, guid: f41a0d8c7832e844d8a237fac386fb6b, type: 3}
   - {fileID: 4664908307281236317, guid: 5762dc221ab7924418f9a914f3459a5a, type: 3}
+  - {fileID: 4812271355137549970, guid: 8fe007894ae3419439bacc396199df41, type: 3}
   player: {fileID: 1183616457}
   gameScoreText: {fileID: 1751569824}
   lifeimages:
