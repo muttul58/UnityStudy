@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: -7057983796924181100}
   m_Layer: 0
   m_Name: EnemyB
-  m_TagString: Enemy
+  m_TagString: EnemyBos
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -54,6 +54,7 @@ MonoBehaviour:
   curShotReload: 0
   maxShotReloadBos: 2
   curShotReloadBos: 0
+  isBosPlay: 0
   sprites:
   - {fileID: 1764527668196454919, guid: f13ab2bca1db3264fa33aad7b2529a39, type: 3}
   - {fileID: -5466532798797530909, guid: f13ab2bca1db3264fa33aad7b2529a39, type: 3}
@@ -66,8 +67,8 @@ MonoBehaviour:
   - {fileID: 953796721095458618, guid: 4f694e943dd69b64a829f14499aec496, type: 3}
   - {fileID: 2031236633811125571, guid: cad534fa24ae4d54ba910ec9c945dfcb, type: 3}
   - {fileID: 5550688586116012291, guid: 4f7faca819b455b44b03dcb4d10d477f, type: 3}
-  patternIndex: 0
-  maxPatternCount: 0200000003000000640000000a000000
+  patternIndex: 1
+  maxPatternCount: 050000000a0000000a0000000a000000
   curPatternCount: 0
 --- !u!212 &4812271355137549969
 SpriteRenderer:

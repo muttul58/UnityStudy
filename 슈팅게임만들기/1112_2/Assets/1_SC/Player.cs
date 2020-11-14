@@ -8,7 +8,8 @@ public class Player : MonoBehaviour
     public float speed;
     public float power;
     public int life;
-
+    
+    public bool isNoDeath;
     public bool isTouchTop;
     public bool isTouchBottom;
     public bool isTouchRight;
@@ -118,7 +119,12 @@ public class Player : MonoBehaviour
         }
         else if(collision.gameObject.tag =="EnemyBullet"  || collision.gameObject.tag == "Enemy")
         {
-            if (gameObject.activeSelf == true)
+
+            if (isNoDeath == true)
+            {
+                Destroy(collision.gameObject);
+            }
+            else if (gameObject.activeSelf == true )
             {
                 life--;
                 gameObject.SetActive(false);
@@ -192,6 +198,25 @@ public class Player : MonoBehaviour
                 return;
             FierBoom();
             curBoomLoad = 0;
+        }
+        if (Input.GetKey(KeyCode.F10)) ShieldOnOff();
+
+
+    }
+
+    void ShieldOnOff()
+    {
+        if (isNoDeath == true)
+        {
+            isNoDeath = false;
+            if (gameObject.tag == "Shield")
+                gameObject.SetActive(false);
+        }
+        else 
+        {
+            isNoDeath = true; 
+            if (gameObject.tag == "Shield")
+                gameObject.SetActive(true);
         }
     }
 
